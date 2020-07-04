@@ -36,13 +36,23 @@ In this final project, you will implement the missing parts in the schematic. To
 
 ## Project Rubrics
 
-* FP.1
+* **FP.1**
+
 In the `matchBoundingBox()` function we make a table `matchCountMap` whose size is (num bounding boxes in previous frame x num bounding boxes in current frame). We iterate over the bounding boxes of previous and current frames and keep a track of keypoints as to which bounding box they belong in each frame. The number of keypoints in every bounding box betwwen frames is updated in the table. This is done in line `272-287` of `camFusion_Student.cpp`. Next we find the best match for the bounding box in the previous frame in the current frame by choosing the bounding box id which has the highest number of matches i.e. max element of each row of `matchCountMap` would give us the best match between frames for the bounding boxes. This is implememnted in lines `297-301` and the best bounding boxes matches are returned from the function.
 
-* FP.2
+* **FP.2**
+
 The formula used for TTc lidar is same as discussed in the classroom. The main task here is to deal with the noisy measurements/outliers. To do this, I use the boxplot technique to find out the Inter-Quartile Range (IQR) of the 3D LIDAR points. The lower and upper threshhold limit was chosen as Q1 - 1.2 * IQR and Q3 + 1.2 * IQR respectively. After performing the outlier removal I found it better to use the mean x value of the LIDAR points in the TTC calculations instead of the x minimum of the points as it gives better TTC calculations. Using x minimum sometimes causes erroe when the measurement is faulty near the object edges. This can be foundin the `computeTTCLidar()` function. I have created a `utils.cpp` file which contains the outlier removal function as well as a fucntion for `IQR` calculations separately for LIDAR and Camera.
 
+* **FP.3**
 
+This functionality is present in the `clusterKptMatchesWithROI()` function. I created a vector of pairs `distMap` to store the index of keypoints within the bounding box of the current frame which have been matched with keypoints in the same bounding box in the previous frame in the first part of the pair. The second part of the vector of pairs store the euclidean distance between the matches. Now, the outliers present in the `distMap` are removed by using the same Inter-Qaurtile Range (IQR) technique as used in the Lidar case. This is implemented in `utils.cpp` The index of the inliers are added to the `kptMatches` of the respective `boundingBox` in every frame.
+
+* **FP.4**
+
+In the TTC for camera we compute the distance ratios between all matched keypoints within the bounding boxes. We choose the median of the distance ratio for the camera TTC computation so as to deal with outliers if any.
+
+* **FP.5**
 
 
 
